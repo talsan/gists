@@ -31,11 +31,10 @@ Output:
     pandas dataframe with etf holdings
 '''
 
+
 class AthenaQuery():
 
-    def __init__(self, user_query, output_bucket = 'athena_query_outputs',
-                 region='us-west-2', database='qcdb', work_group='primary',
-                 sleep_between_requests = 3):
+    def __init__(self, user_query, output_bucket, region, database, work_group, sleep_between_requests):
         self.query = user_query
         self.database = database
         self.work_group = work_group
@@ -118,8 +117,10 @@ class AthenaQuery():
         print(athena_query_str)
 
 
-def query(sql_string, database='qcdb', cleanup=False):
-    aq = AthenaQuery(sql_string, database)
+def query(sql_string, output_bucket='athena_query_outputs', region='us-west-2', database='qcdb',
+          work_group='primary', sleep_between_requests=3, cleanup=False):
+
+    aq = AthenaQuery(sql_string, output_bucket, region, database, work_group, sleep_between_requests)
     s3_key = aq.run_query()
     output_df = aq.get_query_output(s3_key)
 
